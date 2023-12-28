@@ -1,6 +1,7 @@
 package com.booking.utils;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.jayway.jsonpath.JsonPath;
+import org.json.JSONTokener;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -9,9 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -70,7 +69,7 @@ public class ApiUtils {
                 + "}";
     }
       public static String updateUser() {
-        return ("{\"user\": {\"user\": \"fareena6@gmail.com\"}}");
+        return ("{\"user\": {\"user\": \"fareena3@gmail.com\",\"bio\":\"Its a sample bio\"}}");
     }
 
     public static String updateArticle() {
@@ -159,10 +158,11 @@ public class ApiUtils {
                 .body(payload)
                 .post("/" + "user");
     }
-    public static Response updateUser(String payload) {
+    public static Response updateUser(String payload,String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
                 .header("Accept", "application/json")// Optionally set "Accept" header
                 .body(payload)
                 .put("/" + "user");

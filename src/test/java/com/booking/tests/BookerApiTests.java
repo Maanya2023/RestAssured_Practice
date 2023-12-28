@@ -29,7 +29,6 @@ public class BookerApiTests {
         TestDataStore.storeData("token",token);
     }
 
-
     @Test(priority = 1)
     public void getTheCurrentUser(){
 
@@ -38,13 +37,16 @@ public class BookerApiTests {
 
         Assert.assertEquals(response.statusCode(), 200);
         String name = String.valueOf(response.jsonPath().getString("user.username"));
+        String bio = String.valueOf(response.jsonPath().getString("user.bio"));
+        Assert.assertEquals(name,"Fareena123");
+        Assert.assertEquals(bio,"Its a sample bio");
         TestDataStore.storeData("name",name);
     }
 
     @Test
     public void updateTheUser() {
         String payload = ApiUtils.updateUser();
-        Response response = ApiUtils.updateUser(payload);
+        Response response = ApiUtils.updateUser(payload,TestDataStore.retrieveData("token"));
         System.out.println("The updated user:" + response.asString());
         Assert.assertEquals(response.statusCode(), 200);
         String userName = String.valueOf(response.jsonPath().getString("user.username"));
