@@ -14,7 +14,7 @@ public class TestDataStore {
         return dataStore.getOrDefault(key, null);
     }
 
-    public static int cleanup() {
+    public static int cleanUp() {
         dataStore.clear();
         return dataStore.size();
     }

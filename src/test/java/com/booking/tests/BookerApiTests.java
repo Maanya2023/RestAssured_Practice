@@ -5,16 +5,19 @@ import com.booking.utils.ConfigLoader;
 import com.booking.utils.TestDataStore;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.util.Map;
 
 public class BookerApiTests {
 
+
     @BeforeClass
-    public void setup() {
+    public void setup() throws ParseException {
         RestAssured.baseURI = ConfigLoader.getEnv("BASE_URL");
 
         Map<String, String> credentials = ApiUtils.getCredentials();
@@ -23,12 +26,96 @@ public class BookerApiTests {
         ApiUtils.ensureSuccessfulAuthentication(response);
 
         String token = ApiUtils.getTokenFromResponse(response);
-        TestDataStore.storeData("token", token);
+        TestDataStore.storeData("token",token);
     }
 
 
-
     @Test(priority = 1)
+    public void getTheCurrentUser(){
+
+        Response response =  ApiUtils.getCurrentUserdetails(TestDataStore.retrieveData("token"));
+        System.out.println("The current User is" + response.asString());
+
+        Assert.assertEquals(response.statusCode(), 200);
+        String name = String.valueOf(response.jsonPath().getString("user.username"));
+        TestDataStore.storeData("name",name);
+    }
+
+    @Test
+    public void updateTheUser() {
+        String payload = ApiUtils.updateUser();
+        Response response = ApiUtils.updateUser(payload);
+        System.out.println("The updated user:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+        String userName = String.valueOf(response.jsonPath().getString("user.username"));
+        TestDataStore.storeData("FareenaS", userName);
+    }
+    @Test
+    public void getAllArticles() {
+        Response response = ApiUtils.getAllArticles();
+        System.out.println("Here are all available articles " + response.asString());
+
+        Assert.assertEquals(response.statusCode(), 200);
+        String name = String.valueOf(response.jsonPath().getInt("articles.title"));
+        TestDataStore.storeData("How to train your Dog", name);
+    }
+    @Test
+    public void getArticlesByAuthor() {
+        Response response = ApiUtils.getArticlesByAuthor();
+        System.out.println("Here are all available articles of the author" + response.asString());
+
+        Assert.assertEquals(response.statusCode(), 200);
+        String name = String.valueOf(response.jsonPath().getInt("articles.title"));
+        TestDataStore.storeData("How to train your Dog", name);
+    }
+    @Test
+    public void getArticlesByTag() {
+        Response response = ApiUtils.getArticlesByTag();
+        System.out.println("Here are all available articles by the tag" + response.asString());
+
+        Assert.assertEquals(response.statusCode(), 200);
+        String name = String.valueOf(response.jsonPath().getInt("articles.title"));
+        TestDataStore.storeData("How to train your Dog", name);
+    }
+
+    @Test
+    public void createAnArticle() {
+        String payload = ApiUtils.createAnArticle();
+        Response response = ApiUtils.creatingAnArticle(payload);
+        System.out.println("Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+    }
+    @Test
+    public void feed() {
+        Response response = ApiUtils.getFeed();
+        System.out.println("Here are all available articles by the tag" + response.asString());
+
+        Assert.assertEquals(response.statusCode(), 200);
+    }
+    @Test
+    public void getArticlesBySlug() {
+        Response response = ApiUtils.getArticlesBySlug();
+        System.out.println("Here are all available articles by the tag" + response.asString());
+
+        Assert.assertEquals(response.statusCode(), 200);
+    }
+    @Test
+    public void updateArticles() {
+        String payload = ApiUtils.updateArticle();
+        Response response = ApiUtils.updateArticle(payload);
+        System.out.println("The updated Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+
+    }
+    @Test
+    public void favoriteArticles() {
+        Response response = ApiUtils.favoriteArticle();
+        System.out.println("The favorite Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+
+    }
+
+    @Test
     public void createBookingHappyPath() {
         String payload = ApiUtils.getHappyPathPayload();
         Response response = ApiUtils.postBooking(payload);
@@ -124,9 +211,9 @@ public class BookerApiTests {
     }
 
     @AfterClass
-    public void cleardata() {
-        TestDataStore.cleanup();
-        Assert.assertEquals(TestDataStore.cleanup(), 0, "TestDataStore should be empty after cleanup");
+    public void clearData() {
+        TestDataStore.cleanUp();
+        Assert.assertEquals(TestDataStore.cleanUp(), 0, "TestDataStore should be empty after cleanup");
     }
 
 }

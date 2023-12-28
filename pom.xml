@@ -70,6 +70,13 @@
             <version>2.12.3</version> <!-- You might want to check for the latest version -->
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
         <!-- ReportPortal listener for TestNG -->
         <dependency>
             <groupId>com.epam.reportportal</groupId>

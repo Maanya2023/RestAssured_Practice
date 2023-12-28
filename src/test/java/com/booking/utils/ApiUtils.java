@@ -1,8 +1,13 @@
 package com.booking.utils;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,12 +38,14 @@ public class ApiUtils {
     }
 
 
-    public static Response authenticateAndGetToken(Map<String, String> credentials) {
+    public static Response authenticateAndGetToken(Map<String, String> credentials) throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject jsonBody=(JSONObject) parser.parse("{\"user\": {\"email\": \"fareena3@gmail.com\",\"password\": \"FF@143ff\"}}");
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON)
-                .body(credentials)
-                .post("/auth");
+                .body(jsonBody)
+                .post("/users/login");
     }
 
     public static void ensureSuccessfulAuthentication(Response response) {
@@ -48,7 +55,7 @@ public class ApiUtils {
     }
 
     public static String getTokenFromResponse(Response response) {
-        return response.jsonPath().getString("token");
+        return response.jsonPath().getString("user.token");
     }
 
     // Utility methods for constructing payloads
@@ -62,7 +69,19 @@ public class ApiUtils {
                 + "\"additionalneeds\": \"Breakfast\""
                 + "}";
     }
+      public static String updateUser() {
+        return ("{\"user\": {\"user\": \"fareena6@gmail.com\"}}");
+    }
 
+    public static String updateArticle() {
+        return ("{\"article\":{\"body\":\"With instructions\"}}");
+    }
+
+
+
+    public static String createAnArticle() {
+        return ("{\"article\":{\"title\":\"How to train your cat\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"training\", \"cat\"]}}");
+    }
     public static String getUpdatedPayload() {
         return "{"
                 + "\"firstname\": \"UpdatedName\","
@@ -85,6 +104,51 @@ public class ApiUtils {
                 + "\"firstname\": \"Jim\""
                 + "}";
     }
+    public static Response getCurrentUserdetails(String token) {
+        return RestAssured
+                .given()
+                .header("Authorization","Bearer "+token)
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .get("/user");
+    }
+    public static Response getAllArticles() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .get("/" + "articles");
+    }
+
+
+    public static Response getArticlesByAuthor() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .get("/" + "articles?author=FareenaS");
+    }
+    public static Response getArticlesByTag() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .get("/" + "articles?author=FareenaS");
+    }
+
+    public static Response getFeed() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .get("/" + "articles/feed");
+    }
+    public static Response getArticlesBySlug() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .get("/" + "articles/{{slug}}");
+    }
 
     // Utility methods for making API requests
     public static Response postBooking(String payload) {
@@ -93,9 +157,39 @@ public class ApiUtils {
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
                 .header("Accept", "application/json")  // Optionally set "Accept" header
                 .body(payload)
-                .post("/" + "booking");
+                .post("/" + "user");
     }
-
+    public static Response updateUser(String payload) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")// Optionally set "Accept" header
+                .body(payload)
+                .put("/" + "user");
+    }
+    public static Response creatingAnArticle(String payload) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")// Optionally set "Accept" header
+                .body(payload)
+                .post("/" + "articles");
+    }
+    public static Response updateArticle(String payload) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")// Optionally set "Accept" header
+                .body(payload)
+                .put("/" + "articles/{{slug}}");
+    }
+    public static Response favoriteArticle() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Accept", "application/json")// Optionally set "Accept" header
+                .put("/" + "articles/{{slug}}/favorite");
+    }
     public static Response getBooking(String bookingId) {
         return RestAssured
                 .given()
