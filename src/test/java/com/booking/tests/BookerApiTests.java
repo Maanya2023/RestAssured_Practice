@@ -43,14 +43,18 @@ public class BookerApiTests {
         TestDataStore.storeData("name",name);
     }
 
+
     @Test
     public void updateTheUser() {
         String payload = ApiUtils.updateUser();
         Response response = ApiUtils.updateUser(payload,TestDataStore.retrieveData("token"));
         System.out.println("The updated user:" + response.asString());
         Assert.assertEquals(response.statusCode(), 200);
-        String userName = String.valueOf(response.jsonPath().getString("user.username"));
-        TestDataStore.storeData("FareenaS", userName);
+        String name = String.valueOf(response.jsonPath().getString("user.username"));
+        String bio = String.valueOf(response.jsonPath().getString("user.bio"));
+        Assert.assertEquals(name,"Maanya");
+        Assert.assertEquals(bio,"Its a saml bio");
+        TestDataStore.storeData("name",name);
     }
     @Test
     public void getAllArticles() {

@@ -69,7 +69,7 @@ public class ApiUtils {
                 + "}";
     }
       public static String updateUser() {
-        return ("{\"user\": {\"user\": \"fareena3@gmail.com\",\"bio\":\"Its a sample bio\"}}");
+        return ("{\"user\": {\"user\": \"fareena3@gmail.com\",\"username\":\"Maanya\"}}");
     }
 
     public static String updateArticle() {
