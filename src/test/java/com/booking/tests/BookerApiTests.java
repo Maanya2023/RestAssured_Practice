@@ -74,7 +74,7 @@ public class BookerApiTests {
 
         Assert.assertEquals(response.statusCode(), 200);
         String title = String.valueOf(response.jsonPath().getString("articles[0].title"));
-        String desc= String.valueOf(response.jsonPath().getString("articles.description"));
+        String desc= String.valueOf(response.jsonPath().getString("articles[0].description"));
         Assert.assertEquals(title,"How to train a Parrot");
         Assert.assertEquals(desc,"Ever wonder how?");
     }
@@ -107,10 +107,18 @@ public class BookerApiTests {
     }
     @Test
     public void getArticlesBySlug() {
-        Response response = ApiUtils.getArticlesBySlug();
-        System.out.println("Here are all available articles by the tag" + response.asString());
+        Response response = ApiUtils.getArticlesBySlug(TestDataStore.retrieveData("token"));
+        System.out.println("Here are all available articles by the Slug" + response.asString());
 
         Assert.assertEquals(response.statusCode(), 200);
+        String slug=String.valueOf(response.jsonPath().getString("article.slug"));
+        Assert.assertEquals(slug,"How-to-train-a-Dog-465654");
+        String title = String.valueOf(response.jsonPath().getString("article.title"));
+        Assert.assertEquals(title,"How to train a Dog");
+        String desc = String.valueOf(response.jsonPath().getString("article.description"));
+        Assert.assertEquals(desc,"Ever wonder how?");
+        String body = String.valueOf(response.jsonPath().getString("article.body"));
+        Assert.assertEquals(body,"Very carefully.");
     }
     @Test
     public void updateArticles() {

@@ -141,12 +141,12 @@ public class ApiUtils {
                 .header("Authorization","Bearer "+token)
                 .get("/" + "articles/feed");
     }
-    public static Response getArticlesBySlug() {
+    public static Response getArticlesBySlug(String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")  // Optionally set "Accept" header
-                .get("/" + "articles/{{slug}}");
+                .header("Authorization","Bearer "+token)
+                .get("/" + "articles/How-to-train-a-Dog-465654");
     }
 
     // Utility methods for making API requests
