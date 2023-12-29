@@ -119,12 +119,12 @@ public class ApiUtils {
     }
 
 
-    public static Response getArticlesByAuthor() {
+    public static Response getArticlesByAuthor(String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")  // Optionally set "Accept" header
-                .get("/" + "articles?author=FareenaS");
+                .header("Authorization","Bearer "+token)
+                .get("/" + "articles?author=Maanya");
     }
     public static Response getArticlesByTag() {
         return RestAssured

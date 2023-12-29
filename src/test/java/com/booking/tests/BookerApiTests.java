@@ -38,8 +38,8 @@ public class BookerApiTests {
         Assert.assertEquals(response.statusCode(), 200);
         String name = String.valueOf(response.jsonPath().getString("user.username"));
         String bio = String.valueOf(response.jsonPath().getString("user.bio"));
-        Assert.assertEquals(name,"Fareena123");
-        Assert.assertEquals(bio,"Its a sample bio");
+        Assert.assertEquals(name,"Maanya");
+        Assert.assertEquals(bio,"Its a saml bio");
         TestDataStore.storeData("name",name);
     }
 
@@ -81,12 +81,13 @@ public class BookerApiTests {
 
     @Test
     public void getArticlesByAuthor() {
-        Response response = ApiUtils.getArticlesByAuthor();
+        Response response = ApiUtils.getArticlesByAuthor(TestDataStore.retrieveData("token"));
         System.out.println("Here are all available articles of the author" + response.asString());
 
         Assert.assertEquals(response.statusCode(), 200);
-        String name = String.valueOf(response.jsonPath().getInt("articles.title"));
-        TestDataStore.storeData("How to train your Dog", name);
+        String title = String.valueOf(response.jsonPath().getString("articles[0].title"));
+        Assert.assertEquals(title,"How to train a Parrot");
+
     }
     @Test
     public void getArticlesByTag() {
