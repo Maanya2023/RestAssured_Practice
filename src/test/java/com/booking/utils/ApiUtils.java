@@ -126,12 +126,12 @@ public class ApiUtils {
                 .header("Authorization","Bearer "+token)
                 .get("/" + "articles?author=Maanya");
     }
-    public static Response getArticlesByTag() {
+    public static Response getArticlesByTag(String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")  // Optionally set "Accept" header
-                .get("/" + "articles?author=FareenaS");
+                .header("Authorization","Bearer "+token)
+                .get("/" + "articles?tag=ipsum");
     }
 
     public static Response getFeed() {
