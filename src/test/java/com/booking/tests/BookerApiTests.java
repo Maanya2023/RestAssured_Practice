@@ -100,8 +100,8 @@ public class BookerApiTests {
     }
     @Test
     public void feed() {
-        Response response = ApiUtils.getFeed();
-        System.out.println("Here are all available articles by the tag" + response.asString());
+        Response response = ApiUtils.getFeed(TestDataStore.retrieveData("token"));
+        System.out.println("Feed : " + response.asString());
 
         Assert.assertEquals(response.statusCode(), 200);
     }

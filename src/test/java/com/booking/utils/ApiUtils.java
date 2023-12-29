@@ -134,11 +134,11 @@ public class ApiUtils {
                 .get("/" + "articles?tag=ipsum");
     }
 
-    public static Response getFeed() {
+    public static Response getFeed(String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .header("Authorization","Bearer "+token)
                 .get("/" + "articles/feed");
     }
     public static Response getArticlesBySlug() {
