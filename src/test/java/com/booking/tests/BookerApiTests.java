@@ -54,8 +54,19 @@ public class BookerApiTests {
         String bio = String.valueOf(response.jsonPath().getString("user.bio"));
         Assert.assertEquals(name,"Maanya");
         Assert.assertEquals(bio,"Its a saml bio");
-        TestDataStore.storeData("name",name);
     }
+    @Test
+    public void createAnArticle() {
+        String payload = ApiUtils.createAnArticle();
+        Response response = ApiUtils.creatingAnArticle(payload,TestDataStore.retrieveData("token"));
+        System.out.println("Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 201);
+        String title = String.valueOf(response.jsonPath().getString("article.title"));
+        String desc= String.valueOf(response.jsonPath().getString("article.description"));
+        Assert.assertEquals(title,"How to train a Parrot");
+        Assert.assertEquals(desc,"Ever wonder how?");
+    }
+
     @Test
     public void getAllArticles() {
         Response response = ApiUtils.getAllArticles();
@@ -82,14 +93,6 @@ public class BookerApiTests {
         Assert.assertEquals(response.statusCode(), 200);
         String name = String.valueOf(response.jsonPath().getInt("articles.title"));
         TestDataStore.storeData("How to train your Dog", name);
-    }
-
-    @Test
-    public void createAnArticle() {
-        String payload = ApiUtils.createAnArticle();
-        Response response = ApiUtils.creatingAnArticle(payload);
-        System.out.println("Article:" + response.asString());
-        Assert.assertEquals(response.statusCode(), 200);
     }
     @Test
     public void feed() {

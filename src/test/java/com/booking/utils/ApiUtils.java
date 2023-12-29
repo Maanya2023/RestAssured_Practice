@@ -79,7 +79,7 @@ public class ApiUtils {
 
 
     public static String createAnArticle() {
-        return ("{\"article\":{\"title\":\"How to train your cat\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"training\", \"cat\"]}}");
+        return ("{\"article\":{\"title\":\"How to train a Parrot\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"training\", \"cat\"]}}");
     }
     public static String getUpdatedPayload() {
         return "{"
@@ -167,10 +167,11 @@ public class ApiUtils {
                 .body(payload)
                 .put("/" + "user");
     }
-    public static Response creatingAnArticle(String payload) {
+    public static Response creatingAnArticle(String payload,String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
                 .header("Accept", "application/json")// Optionally set "Accept" header
                 .body(payload)
                 .post("/" + "articles");
