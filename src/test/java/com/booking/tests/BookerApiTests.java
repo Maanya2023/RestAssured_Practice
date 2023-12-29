@@ -69,13 +69,16 @@ public class BookerApiTests {
 
     @Test
     public void getAllArticles() {
-        Response response = ApiUtils.getAllArticles();
+        Response response = ApiUtils.getAllArticles(TestDataStore.retrieveData("token"));
         System.out.println("Here are all available articles " + response.asString());
 
         Assert.assertEquals(response.statusCode(), 200);
-        String name = String.valueOf(response.jsonPath().getInt("articles.title"));
-        TestDataStore.storeData("How to train your Dog", name);
+        String title = String.valueOf(response.jsonPath().getString("articles[0].title"));
+        String desc= String.valueOf(response.jsonPath().getString("articles.description"));
+        Assert.assertEquals(title,"How to train a Parrot");
+        Assert.assertEquals(desc,"Ever wonder how?");
     }
+
     @Test
     public void getArticlesByAuthor() {
         Response response = ApiUtils.getArticlesByAuthor();

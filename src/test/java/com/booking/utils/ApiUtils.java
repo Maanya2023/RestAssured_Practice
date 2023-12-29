@@ -110,11 +110,11 @@ public class ApiUtils {
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
                 .get("/user");
     }
-    public static Response getAllArticles() {
+    public static Response getAllArticles(String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")  // Optionally set "Accept" header
+                .header("Authorization","Bearer "+token)
                 .get("/" + "articles");
     }
 
