@@ -221,6 +221,26 @@ public class ApiUtils {
                 .header("Authorization","Bearer "+token)
                 .get("/" + "articles/How-to-train-a-Dog-465654/comments");
     }
+    public static Response getAllCommentsWithOutLogin() {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .get("/" + "articles/How-to-train-a-Dog-465654/comments");
+    }
+    public static Response deleteCommentsForArticle(String token) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
+                .delete("/" + "articles/How-to-train-a-Dog-465654/comments/104331");
+    }
+    public static Response deleteArticle(String token) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
+                .delete("/" + "articles/How-to-training-your-Rabbit-465654");
+    }
     public static Response getBooking(String bookingId) {
         return RestAssured
                 .given()

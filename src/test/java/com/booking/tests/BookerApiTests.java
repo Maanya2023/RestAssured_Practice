@@ -202,6 +202,26 @@ public class BookerApiTests {
         String userName = String.valueOf(response.jsonPath().getString("comments[0].author.username"));
         Assert.assertEquals(userName,"Maanya");
     }
+
+    @Test
+    public void getAllCommentsWithOutLogin() {
+        Response response = ApiUtils.getAllCommentsWithOutLogin();
+        System.out.println("The favorite Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+    }
+
+    @Test
+    public void deleteCommentsForArticle() {
+        Response response = ApiUtils.deleteCommentsForArticle(TestDataStore.retrieveData("token"));
+        System.out.println("The favorite Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+    }
+
+    @Test
+    public void deleteArticle() {
+        Response response = ApiUtils.deleteArticle(TestDataStore.retrieveData("token"));
+        Assert.assertEquals(response.statusCode(), 204);
+    }
 //    @Test
 //    public void createBookingHappyPath() {
 //        String payload = ApiUtils.getHappyPathPayload();
