@@ -123,113 +123,179 @@ public class BookerApiTests {
     @Test
     public void updateArticles() {
         String payload = ApiUtils.updateArticle();
-        Response response = ApiUtils.updateArticle(payload);
+        Response response = ApiUtils.updateArticles(payload,TestDataStore.retrieveData("token"));
         System.out.println("The updated Article:" + response.asString());
         Assert.assertEquals(response.statusCode(), 200);
-
+        String slug=String.valueOf(response.jsonPath().getString("article.slug"));
+        Assert.assertEquals(slug,"How-to-train-a-Dog-465654");
+        String title = String.valueOf(response.jsonPath().getString("article.title"));
+        Assert.assertEquals(title,"How to train a Dog");
+        String desc = String.valueOf(response.jsonPath().getString("article.description"));
+        Assert.assertEquals(desc,"Ever wonder how?");
+        String body = String.valueOf(response.jsonPath().getString("article.body"));
+        Assert.assertEquals(body,"With instructions");
     }
     @Test
     public void favoriteArticles() {
-        Response response = ApiUtils.favoriteArticle();
+        Response response = ApiUtils.favoriteArticle(TestDataStore.retrieveData("token"));
         System.out.println("The favorite Article:" + response.asString());
         Assert.assertEquals(response.statusCode(), 200);
-
+        String slug=String.valueOf(response.jsonPath().getString("article.slug"));
+        Assert.assertEquals(slug,"How-to-train-a-Dog-465654");
+        String title = String.valueOf(response.jsonPath().getString("article.title"));
+        Assert.assertEquals(title,"How to train a Dog");
+        String desc = String.valueOf(response.jsonPath().getString("article.description"));
+        Assert.assertEquals(desc,"Ever wonder how?");
+        String body = String.valueOf(response.jsonPath().getString("article.body"));
+        Assert.assertEquals(body,"With instructions");
     }
 
     @Test
-    public void createBookingHappyPath() {
-        String payload = ApiUtils.getHappyPathPayload();
-        Response response = ApiUtils.postBooking(payload);
-        System.out.println("The bookingid is:" + response.asString());
-
+    public void favoriteArticleByUser() {
+        Response response = ApiUtils.articlesFavByUser(TestDataStore.retrieveData("token"));
+        System.out.println("The favorite Article:" + response.asString());
         Assert.assertEquals(response.statusCode(), 200);
-       //as per 'bookerapi' documentation 'property:bookingid' is 'integer'
-        String bookingId = String.valueOf(response.jsonPath().getInt("bookingid"));
-        TestDataStore.storeData("bookingId", bookingId);
+        String slug=String.valueOf(response.jsonPath().getString("articles[0].slug"));
+        Assert.assertEquals(slug,"How-to-train-a-Dog-465654");
+        String title = String.valueOf(response.jsonPath().getString("articles[0].title"));
+        Assert.assertEquals(title,"How to train a Dog");
+        String desc = String.valueOf(response.jsonPath().getString("articles[0].description"));
+        Assert.assertEquals(desc,"Ever wonder how?");
+        String body = String.valueOf(response.jsonPath().getString("articles[0].body"));
+        Assert.assertEquals(body,"With instructions");
     }
 
-    @Test(priority = 2)
-    public void getBookingHappyPath() {
-        String bookingId = TestDataStore.retrieveData("bookingId");
-        Assert.assertNotNull(bookingId, "Booking ID is null!");
-
-        Response response = ApiUtils.getBooking(bookingId);
-        System.out.println("The getbooking details:" + response.asString());
-
-        Assert.assertEquals(response.statusCode(), 200); //as per 'bookerapi' documentation
+    @Test
+    public void unFavoriteArticle() {
+        Response response = ApiUtils.unFavArticles(TestDataStore.retrieveData("token"));
+        System.out.println("The favorite Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+        String slug=String.valueOf(response.jsonPath().getString("article.slug"));
+        Assert.assertEquals(slug,"How-to-training-your-parrot-463796");
+        String title = String.valueOf(response.jsonPath().getString("article.title"));
+        Assert.assertEquals(title,"How to training your parrot");
+        String desc = String.valueOf(response.jsonPath().getString("article.description"));
+        Assert.assertEquals(desc,"Ever wonder how?");
+        String body = String.valueOf(response.jsonPath().getString("article.body"));
+        Assert.assertEquals(body,"Very carefully.");
     }
 
-    @Test(priority = 3)
-    public void updateBookingHappyPath() {
-        String bookingId = TestDataStore.retrieveData("bookingId");
-        String token = TestDataStore.retrieveData("token");
+    @Test
+    public void addComments() {
+        String payload = ApiUtils.addComment();
+        Response response = ApiUtils.addComments(payload,TestDataStore.retrieveData("token"));
+        System.out.println("The favorite Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+        String body=String.valueOf(response.jsonPath().getString("comment.body"));
+        Assert.assertEquals(body,"Thank you so much!");
+        String userName = String.valueOf(response.jsonPath().getString("comment.author.username"));
+        Assert.assertEquals(userName,"Maanya");
 
-        Assert.assertNotNull(bookingId, "Booking ID is null!");
-        Assert.assertNotNull(token, "Token is null!");
-
-        Response response = ApiUtils.updateBooking(bookingId, token);
-        System.out.println("The updatedbooking details:" + response.asString());
-
-        Assert.assertEquals(response.statusCode(), 200); //as per 'bookerapi' documentation
     }
-
-    @Test(priority = 4)
-    public void partialUpdateBookingHappyPath() {
-        String bookingId = TestDataStore.retrieveData("bookingId");
-        String token = TestDataStore.retrieveData("token");
-
-        Assert.assertNotNull(bookingId, "Booking ID is null!");
-        Assert.assertNotNull(token, "Token is null!");
-
-        Response response = ApiUtils.partialUpdateBooking(bookingId, token);
-        System.out.println("The partiallyupdatedbooking details:" + response.asString());
-
-        Assert.assertEquals(response.statusCode(), 200); //as per 'bookerapi' documentation
+    @Test
+    public void getAllCommentsForArticle() {
+        Response response = ApiUtils.getAllCommentsOfArticle(TestDataStore.retrieveData("token"));
+        System.out.println("The favorite Article:" + response.asString());
+        Assert.assertEquals(response.statusCode(), 200);
+        String body=String.valueOf(response.jsonPath().getString("comments[0].body"));
+        Assert.assertEquals(body,"Thank you so much!");
+        String userName = String.valueOf(response.jsonPath().getString("comments[0].author.username"));
+        Assert.assertEquals(userName,"Maanya");
     }
-
-    @Test(priority = 5)
-    public void deleteBookingHappyPath() {
-        String bookingId = TestDataStore.retrieveData("bookingId");
-        String token = TestDataStore.retrieveData("token");
-
-        Assert.assertNotNull(bookingId, "Booking ID is null!");
-        Assert.assertNotNull(token, "Token is null!");
-
-        Response response = ApiUtils.deleteBooking(bookingId, token);
-        System.out.println("The booking details deleted:" + response.asString());
-
-        Assert.assertEquals(response.statusCode(), 201); //as per 'bookerapi' documentation
-    }
-
-    @Test(priority = 6)
-    public void createBookingNegativePath() {
-        String payload = ApiUtils.getIncompletePayload();
-        Response response = ApiUtils.postBooking(payload);
-        System.out.println("The invalidcreatebooking details:" + response.asString());
-
-        Assert.assertNotEquals(response.statusCode(), 200);
-    }
-
-    @Test(priority = 7)
-    public void getBookingNegativePath() {
-        String nonExistentBookingId = "999999";
-        Response response = ApiUtils.getBooking(nonExistentBookingId);
-        System.out.println("The invalidgetbooking details:" + response.asString());
-
-        Assert.assertNotEquals(response.statusCode(), 200);
-    }
-
-    @Test(priority = 8)
-    public void deleteBookingNegativePath() {
-        String nonExistentBookingId = "999999";
-        String token = TestDataStore.retrieveData("token");
-        Assert.assertNotNull(token, "Token is null!");
-
-        Response response = ApiUtils.deleteBooking(nonExistentBookingId, token);
-        System.out.println("The delete invalid booking details:" + response.asString());
-
-        Assert.assertNotEquals(response.statusCode(), 201);
-    }
+//    @Test
+//    public void createBookingHappyPath() {
+//        String payload = ApiUtils.getHappyPathPayload();
+//        Response response = ApiUtils.postBooking(payload);
+//        System.out.println("The bookingid is:" + response.asString());
+//
+//        Assert.assertEquals(response.statusCode(), 200);
+//       //as per 'bookerapi' documentation 'property:bookingid' is 'integer'
+//        String bookingId = String.valueOf(response.jsonPath().getInt("bookingid"));
+//        TestDataStore.storeData("bookingId", bookingId);
+//    }
+//
+//    @Test(priority = 2)
+//    public void getBookingHappyPath() {
+//        String bookingId = TestDataStore.retrieveData("bookingId");
+//        Assert.assertNotNull(bookingId, "Booking ID is null!");
+//
+//        Response response = ApiUtils.getBooking(bookingId);
+//        System.out.println("The getbooking details:" + response.asString());
+//
+//        Assert.assertEquals(response.statusCode(), 200); //as per 'bookerapi' documentation
+//    }
+//
+//    @Test(priority = 3)
+//    public void updateBookingHappyPath() {
+//        String bookingId = TestDataStore.retrieveData("bookingId");
+//        String token = TestDataStore.retrieveData("token");
+//
+//        Assert.assertNotNull(bookingId, "Booking ID is null!");
+//        Assert.assertNotNull(token, "Token is null!");
+//
+//        Response response = ApiUtils.updateBooking(bookingId, token);
+//        System.out.println("The updatedbooking details:" + response.asString());
+//
+//        Assert.assertEquals(response.statusCode(), 200); //as per 'bookerapi' documentation
+//    }
+//
+//    @Test(priority = 4)
+//    public void partialUpdateBookingHappyPath() {
+//        String bookingId = TestDataStore.retrieveData("bookingId");
+//        String token = TestDataStore.retrieveData("token");
+//
+//        Assert.assertNotNull(bookingId, "Booking ID is null!");
+//        Assert.assertNotNull(token, "Token is null!");
+//
+//        Response response = ApiUtils.partialUpdateBooking(bookingId, token);
+//        System.out.println("The partiallyupdatedbooking details:" + response.asString());
+//
+//        Assert.assertEquals(response.statusCode(), 200); //as per 'bookerapi' documentation
+//    }
+//
+//    @Test(priority = 5)
+//    public void deleteBookingHappyPath() {
+//        String bookingId = TestDataStore.retrieveData("bookingId");
+//        String token = TestDataStore.retrieveData("token");
+//
+//        Assert.assertNotNull(bookingId, "Booking ID is null!");
+//        Assert.assertNotNull(token, "Token is null!");
+//
+//        Response response = ApiUtils.deleteBooking(bookingId, token);
+//        System.out.println("The booking details deleted:" + response.asString());
+//
+//        Assert.assertEquals(response.statusCode(), 201); //as per 'bookerapi' documentation
+//    }
+//
+//    @Test(priority = 6)
+//    public void createBookingNegativePath() {
+//        String payload = ApiUtils.getIncompletePayload();
+//        Response response = ApiUtils.postBooking(payload);
+//        System.out.println("The invalidcreatebooking details:" + response.asString());
+//
+//        Assert.assertNotEquals(response.statusCode(), 200);
+//    }
+//
+//    @Test(priority = 7)
+//    public void getBookingNegativePath() {
+//        String nonExistentBookingId = "999999";
+//        Response response = ApiUtils.getBooking(nonExistentBookingId);
+//        System.out.println("The invalidgetbooking details:" + response.asString());
+//
+//        Assert.assertNotEquals(response.statusCode(), 200);
+//    }
+//
+//    @Test(priority = 8)
+//    public void deleteBookingNegativePath() {
+//        String nonExistentBookingId = "999999";
+//        String token = TestDataStore.retrieveData("token");
+//        Assert.assertNotNull(token, "Token is null!");
+//
+//        Response response = ApiUtils.deleteBooking(nonExistentBookingId, token);
+//        System.out.println("The delete invalid booking details:" + response.asString());
+//
+//        Assert.assertNotEquals(response.statusCode(), 201);
+//    }
 
     @AfterClass
     public void clearData() {

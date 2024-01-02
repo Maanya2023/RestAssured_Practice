@@ -76,7 +76,9 @@ public class ApiUtils {
         return ("{\"article\":{\"body\":\"With instructions\"}}");
     }
 
-
+    public static String addComment() {
+        return ("{\"comment\":{\"body\":\"Thank you so much!\"}}");
+    }
 
     public static String createAnArticle() {
         return ("{\"article\":{\"title\":\"How to train a Parrot\", \"description\":\"Ever wonder how?\", \"body\":\"Very carefully.\", \"tagList\":[\"training\", \"cat\"]}}");
@@ -172,24 +174,52 @@ public class ApiUtils {
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
                 .header("Authorization","Bearer "+token)
-                .header("Accept", "application/json")// Optionally set "Accept" header
                 .body(payload)
                 .post("/" + "articles");
     }
-    public static Response updateArticle(String payload) {
+    public static Response updateArticles(String payload,String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")// Optionally set "Accept" header
+                .header("Authorization","Bearer "+token)
                 .body(payload)
-                .put("/" + "articles/{{slug}}");
+                .put("/" + "articles/How-to-train-a-Dog-465654");
     }
-    public static Response favoriteArticle() {
+    public static Response favoriteArticle(String token) {
         return RestAssured
                 .given()
                 .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
-                .header("Accept", "application/json")// Optionally set "Accept" header
-                .put("/" + "articles/{{slug}}/favorite");
+                .header("Authorization","Bearer "+token)
+                .post("/" + "articles/How-to-train-a-Dog-465654/favorite");
+    }
+    public static Response articlesFavByUser(String token) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
+                .get("/" + "articles?favorited=Maanya");
+    }
+    public static Response unFavArticles(String token) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
+                .delete("/" + "articles/How-to-training-your-parrot-463796/favorite");
+    }
+    public static Response addComments(String payload,String token) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
+                .body(payload)
+                .post("/" + "articles/How-to-train-a-Dog-465654/comments");
+    }
+    public static Response getAllCommentsOfArticle(String token) {
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON) // Sets "Content-Type: application/json"
+                .header("Authorization","Bearer "+token)
+                .get("/" + "articles/How-to-train-a-Dog-465654/comments");
     }
     public static Response getBooking(String bookingId) {
         return RestAssured
